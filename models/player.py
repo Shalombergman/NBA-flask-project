@@ -36,6 +36,8 @@ class Player(db.Model):
     rebounds = db.Column(db.Integer)
     season = db.Column(db.Integer, nullable=False)
     team = db.Column(db.String)
+    ATR = db.Column(db.Float)
+    PPG = db.Column(db.Float, default=0)
 
 
 
@@ -70,5 +72,7 @@ class Player(db.Model):
             "points": self.points,
             "rebounds": self.rebounds,
             "season": self.season,
-            "team": self.team
+            "team": self.team,
+            "ATR": self.ATR,
+            "PPG": self.PPG,
         }

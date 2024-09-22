@@ -1,42 +1,18 @@
-from flask import Blueprint, jsonify
 
-
-from models.player import Player
+from flask import Blueprint, jsonify, request
 from services import player_service
-
-
-
 
 players_bp = Blueprint('players', __name__)
 
-
-@players_bp.route('/players', methods=['GET'])
+@players_bp.route('/', methods=['GET'])
 def get_players():
-    players = Player.query.all()
-    return jsonify([Player.to_dict(self=player) for player in players]), 200
 
-@players_bp.route('/?position=<position>&season=>season>', methods=['GET'])
-def get_position(position, season):
-    return player_service.get_players_from_db(position, season)
+    position = request.args.get('position')
+    season = request.args.get('season')
+    players = player_service.sync_players_data()
+    return jsonify(players), 200
 
-
-
-
-
-
-
-# @players_bp.route('/players/create', methods=['POST'])
-# def create_player():
-#     data = request.get_json
-#     # add_or_update_player(data)
-#     return jsonify(data), 201
-#
-# @players_bp.route('/players/update', methods=['POST'])
-# def update_players():
-#     data = request.json
-#     players = get_players_from_nba_api(data['team_id'])
-#
-#     for player in players:
-#         # add_or_update_player(player)
-#
-#     return jsonify({"status": "success"}), 200
+@players_bp.route('/sync', methods=['POST'])
+def sync_players():
+    player_service.sync_players_data()
+    return jsonify({"message": "Players data synced successfully"}), 200
